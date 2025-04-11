@@ -1,59 +1,108 @@
-# T2
+# 💰 Aplikacja do Śledzenia Wydatków i Przychodów
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.5.
+## 📝 Opis projektu
 
-## Development server
+Aplikacja stworzona w Angularze, której celem jest pomoc użytkownikom w zarządzaniu finansami osobistymi. Pozwala na śledzenie przychodów i wydatków, oferuje możliwość analizy danych na wykresach, a także zarządzanie kontem użytkownika. Projekt został zrealizowany w ramach praktyk zawodowych 2024/2025.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## 🛠️ Technologie
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Angular 17+** – framework frontendowy
+- **TypeScript** – język programowania
+- **RxJS** – programowanie reaktywne
+- **Chart.js** / **Ngx-Charts** – wizualizacja danych
+- **Angular Material** – komponenty interfejsu użytkownika
+- **Firebase** / **Node.js + Express + MongoDB** – backend i baza danych (do wyboru)
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🎯 Główne funkcjonalności
 
-```bash
-ng generate component component-name
-```
+### 🔐 Konto użytkownika
+- Rejestracja nowego konta
+- Logowanie i wylogowanie
+- Edycja danych konta
+- Usuwanie konta
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 📥 Przychody i 📤 Wydatki
+- Dodawanie przychodów i wydatków
+- Edycja wpisów finansowych
+- Usuwanie wpisów
+- Filtrowanie po dacie (miesiąc, rok)
 
-```bash
-ng generate --help
-```
+### 📈 Analiza finansowa
+- Wykresy miesięczne przychodów i wydatków
+- Graficzna analiza salda (różnica między przychodami a wydatkami)
+- Podsumowanie finansowe (saldo, suma przychodów, suma wydatków)
 
-## Building
+---
 
-To build the project run:
+## 🚀 Jak uruchomić projekt lokalnie?
 
-```bash
-ng build
-```
+1. **Klonuj repozytorium:**
+   ```bash
+   git clone https://github.com/nazwa-uzytkownika/nazwa-projektu.git
+   cd nazwa-projektu
+   ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+2. **Zainstaluj zależności:**
+   ```bash
+   npm install
+   ```
 
-## Running unit tests
+3. **Uruchom aplikację:**
+   ```bash
+   ng serve
+   ```
+   Aplikacja będzie dostępna pod adresem `http://localhost:4200`
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
+## 🧪 Testowanie
+
+Używane narzędzia:
+- **Jasmine & Karma** – testy jednostkowe Angular
+
+Uruchomienie testów:
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## 📁 Struktura folderów
 
-```bash
-ng e2e
+```
+src/
+├── app/
+│   ├── auth/          # logowanie, rejestracja
+│   ├── dashboard/     # panel główny
+│   ├── income/        # komponenty przychodów
+│   ├── expenses/      # komponenty wydatków
+│   ├── chart/         # wykresy
+│   └── services/      # logika i komunikacja z backendem
+└── assets/            # zasoby statyczne
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+## 👨‍💻 Autorzy
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Projekt wykonany przez [Imię i Nazwisko] w ramach praktyk zawodowych 2024/25.
+
+---
+
+## 📌 Dalszy rozwój (opcjonalnie)
+
+- [x] Podstawowe funkcjonalności (logowanie, CRUD finansów)
+- [ ] Kategorie wydatków i przychodów
+- [ ] Eksport danych (PDF/CSV)
+- [ ] Powiadomienia o zbliżającym się limicie budżetu
+
+---
+
+## 📄 Licencja
+
+Projekt edukacyjny – tylko do celów naukowych.
+
