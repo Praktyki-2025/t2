@@ -89,7 +89,13 @@ src/
 
 ## 👨‍💻 Autorzy
 
-Projekt wykonany przez [Imię i Nazwisko] w ramach praktyk zawodowych 2024/25.
+Projekt wykonany w ramach praktyk zawodowych 2024/25.
+
+Przez:
+- Paweł P.
+- Daniel F.
+- Hubert W.
+- Mateusz P.
 
 ---
 
