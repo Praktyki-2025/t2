@@ -1,12 +1,21 @@
 from flask import Blueprint, jsonify, request
 from base64 import b64encode, b64decode
+from typing import Optional
+from uuid import UUID
 
 user_bp = Blueprint('user', __name__)
 
 class User:
-    def __init__(self, email: str, password: str):
+    def __init__(self, email: str, password: str, payments: list[UUID] = None):
         self.email = email
         self.password = password
+        self.payments = payments or []
+    
+    def add_payment(self, payment: UUID) -> None:
+        self.payments.append(payment)
+
+    def remove_payment(self, payment: UUID) -> None:
+        self.payments.remove(payment)
     
     def create_user(email: str, password: str) -> 'User':
         return User(email, User.get_password_hash(password))
@@ -14,17 +23,23 @@ class User:
     def check_password(self, password: str) -> bool:
         return self.password == User.get_password_hash(password)
     
-    def get_password_hash(self, password: str) -> str:
+    def get_password_hash(password: str) -> str:
         return b64encode(password.encode()).decode()
 
     def get_token(self) -> str:
-        return b64encode(f"{self.email}".encode()).decode()
+        return b64encode(f"{self.email}:{self.password}".encode()).decode()
     
-    def get_user_from_token(users: list['User'], token: str) -> 'User' | None:
-        email = b64decode(token.encode()).decode()
-        for user in users:
-            if user.email == email:
-                return user
+    def get_user_from_token(users: list['User'], token: str) -> Optional['User']:
+        try:
+            decripted = b64decode(token.encode()).decode().split(':')
+            email = decripted[0]
+            decripted.pop(0)
+            hashed_password = ":".join(decripted)
+            for user in users:
+                if user.email == email and user.password == hashed_password:
+                    return user
+        except Exception as e:
+            print(f"Error decoding token: {e}")
         return None
 
 USERS: list[User] = []
@@ -78,7 +93,7 @@ def update():
     Update a user's email or password.
     This endpoint requires a token to identify the user to be updated.
     """
-    data = request.get_json()
+    data: dict = request.get_json()
 
     if not data or 'token' not in data or ('password' not in data and 'email' not in data):
         return jsonify({"message": "Bad request", "code": 400}), 400
@@ -88,8 +103,8 @@ def update():
     if user is None:
         return jsonify({"message": "Invalid token", "code": 401}), 401
     
-    new_email = data['email']
-    new_password = data['password']
+    new_email = data.get('email', None)
+    new_password = data.get('password', None)
 
     if new_email:
         for _u in USERS:

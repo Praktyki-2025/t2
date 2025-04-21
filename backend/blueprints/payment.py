@@ -2,15 +2,22 @@ from flask import Blueprint, jsonify, request
 from blueprints.user import User, USERS
 from datetime import datetime
 import uuid as uuid_lib
+from typing import Optional
 
 payment_bp = Blueprint('payment', __name__)
 
 class Payment:
     def __init__(self, user: User, amount: float, timestamp: datetime, uuid: uuid_lib.UUID = None):
         self.uuid = uuid or uuid_lib.uuid4()
-        self.user = user
         self.amount = amount
         self.timestamp = timestamp
+        self.user = user
+
+        self.user.add_payment(self.uuid)
+    
+    def __del__(self):
+        if self.user:
+            self.user.remove_payment(self.uuid)
     
     def serialize(self) -> dict:
         return {
@@ -20,11 +27,15 @@ class Payment:
             "timestamp": self.timestamp.isoformat()
         }
 
-    def deserialize(data: dict) -> 'Payment' | None:
+    def deserialize(data: dict) -> Optional['Payment']:
         try:
             uuid_str = data['uuid']
             uuid = uuid_lib.UUID(uuid_str)
-            user = User.get_user_from_token(USERS, data['user'])
+            user = None
+            for u in USERS:
+                if uuid in u.payments:
+                    user = u
+                    break
             if user is None:
                 return None
             amount = float(data['amount'])
@@ -54,7 +65,7 @@ def get_all_payments():
     
     payments = [payment.serialize() for payment in PAYMENTS if payment.user.email == user.email]
     
-    return jsonify({"payments": payments, "code": 200}), 200
+    return jsonify({"payments_count": len(payments), "payments": payments, "code": 200}), 200
 
 @payment_bp.route('/', methods=['POST'])
 def create_payment():
@@ -69,13 +80,14 @@ def create_payment():
     
     token = data['token']
     amount = data['amount']
+    timestamp = data.get('timestamp', None)
     
     user: User = User.get_user_from_token(USERS, token)
     
     if user is None:
         return jsonify({"message": "User not found", "code": 404}), 404
     
-    payment = Payment(user, amount, datetime.now())
+    payment = Payment(user, amount, timestamp or datetime.now())
     PAYMENTS.append(payment)
     
     return jsonify({"message": "Payment created", "payment": payment.serialize(), "code": 201}), 201
