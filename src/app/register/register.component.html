@@ -1,0 +1,16 @@
+<h1>Register</h1>
+<br>
+<form>
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" [formControl]="email"> <br>
+    <label for="pass">Password:</label>
+    <input type="password" id="pass" [formControl]="password"><br>
+    <label for="pass2">Confirm password:</label>
+    <input type="password" id="pass2" [formControl]="password_confirm"><br><br>
+    <button type="button" (click)="registerPress()">Register</button>
+</form>
+<div *ngIf="errorMessage" class="error-message">
+    <br>
+    {{ errorMessage }} <br><br>
+    <button (click)="clearErrorMessage()">Close</button>
+</div>

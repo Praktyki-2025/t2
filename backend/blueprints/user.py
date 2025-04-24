@@ -72,6 +72,10 @@ def login():
     Login a user and return a token.
     This endpoint requires the user's email and password to return token.
     """
+    if len(USERS) == 0:
+        print("no users")
+    for _u in USERS:
+        print("user: ", _u.email, _u.password)
     data = request.get_json()
 
     if not data or 'email' not in data or 'password' not in data:
@@ -106,15 +110,30 @@ def update():
     new_email = data.get('email', None)
     new_password = data.get('password', None)
 
+    print("new_email: ", new_email)
+    print("new_password: ", new_password)
+
     if new_email:
         for _u in USERS:
             if _u.email == new_email:
                 return jsonify({"message": "Email already exists", "code": 409}), 409
+    print("before: ",len(USERS))
     USERS.remove(user)
+    print("after: ",len(USERS))
 
-    user = User.create_user(new_email if new_email else user.email, new_password if new_password else user.password)
+    new_email = new_email if new_email else user.email
+    new_password = User.get_password_hash(new_password) if new_password else user.password
+    
+    print("new_email: ", new_email)
+    print("new_password: ", new_password)
+
+    # user = User.create_user(new_email if new_email else user.email, new_password if new_password else user.password)
+
+    user = User(new_email, new_password, user.payments)
 
     USERS.append(user)
+    print("after append: ",len(USERS))
+    print("user: ", user.email, user.password)
 
     return jsonify({"message": "User updated", "code": 200}), 200
 
