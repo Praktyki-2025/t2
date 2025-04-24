@@ -20,7 +20,7 @@
         <td>{{ transaction.uuid }}</td>
         <td>{{ transaction.timestamp }}</td>
         <td>{{ transaction.amount }}</td>
-        <td><button>edit</button><button style="margin-left: 0.25rem;">delete</button></td>
+        <td><button (click)="editTransaction(transaction.uuid)">edit</button><button (click)="deleteTransaction(transaction.uuid)" style="margin-left: 0.25rem;">delete</button></td>
     </tr>
 </table>
 <p *ngIf="transactions.length === 0">No transactions found</p>

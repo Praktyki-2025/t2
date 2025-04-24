@@ -60,4 +60,25 @@ export class HomeComponent implements OnInit {
   async refreshTransactions() {
     this.transactions = await this.transactionService.getTransactions();
   }
+
+  deleteTransaction(uuid: string) {
+    this.transactionService.deleteTransaction(uuid).then((response) => {
+      if (response === 200) {
+        console.log('Transaction deleted successfully:', response);
+        this.refreshTransactions().then(() => {
+          console.log("Transactions refreshed successfully.");
+          alert('Transaction deleted successfully!');
+        });
+      } else {
+        console.error('Failed to delete transaction:', response);
+      }
+    }).catch((error) => {
+      console.error('Error during transaction deletion:', error);
+    });
+  }
+
+  editTransaction(uuid: string) {
+    const transaction = this.transactions.find(t => t.uuid === uuid);
+    this.router.navigate(['/edit-transaction', uuid]);
+  }
 }

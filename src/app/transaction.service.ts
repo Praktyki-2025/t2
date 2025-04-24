@@ -35,7 +35,7 @@ export class TransactionService {
 
       const data = await response.json();
       const transactions = data.payments.map((payment: any) => {
-        return new Transaction(payment.uuid, payment.amount, payment.timestamp);
+        return new Transaction(payment.uuid, payment.timestamp, payment.amount);
       });
       
       return transactions || [];
@@ -59,6 +59,50 @@ export class TransactionService {
       },
       body: JSON.stringify({
         token: JSON.parse(localStorage.getItem('user') || '{}').token || '',
+        amount: amount,
+        timestamp: timestamp
+      })
+    });
+
+    return response.status;
+  }
+
+  /**
+   * Deletes a transaction with the given UUID.
+   * @param uuid UUID of the transaction to be deleted
+   * @returns http status code. 200 for success, 400 for bad request, 404 for not found and unauthorize, 500 for server error
+   */
+  async deleteTransaction(uuid: string): Promise<number> {
+    const response = await fetch(`${this.baseUrl}/payment/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: JSON.parse(localStorage.getItem('user') || '{}').token || '',
+        uuid: uuid
+      })
+    });
+
+    return response.status;
+  }
+
+  /**
+   * Updates a transaction with the given UUID, amount, and timestamp.
+   * @param uuid UUID of the transaction to be updated
+   * @param amount new amount of the transaction
+   * @param timestamp new timestamp of the transaction
+   * @returns http status code. 200 for success, 400 for bad request, 404 for not found and unauthorize, 500 for server error
+   */
+  async updateTransaction(uuid: string, amount: number, timestamp: string): Promise<number> {
+    const response = await fetch(`${this.baseUrl}/payment/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: JSON.parse(localStorage.getItem('user') || '{}').token || '',
+        uuid: uuid,
         amount: amount,
         timestamp: timestamp
       })
