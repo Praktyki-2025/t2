@@ -1,0 +1,26 @@
+<h1>Welcome</h1>
+<h3>{{ email }}</h3>
+
+<button>Delete account</button><br><br>
+<button (click)="editAccount()">Edit account</button><br>
+<button (click)="logout()">Logout</button>
+
+<br><br>
+
+<h4>Transactions</h4>
+<button>Refresh</button>
+<table *ngIf="transactions.length > 0">
+    <tr>
+        <td>UUID</td>
+        <td>Timestamp</td>
+        <td>Amount</td>
+        <td>Action</td>
+    </tr>
+    <tr *ngFor="let transaction of transactions">
+        <td>{{ transaction.uuid }}</td>
+        <td>{{ transaction.timestamp }}</td>
+        <td>{{ transaction.amount }}</td>
+        <td><button>edit</button><button style="margin-left: 0.25rem;">delete</button></td>
+    </tr>
+</table>
+<p *ngIf="transactions.length === 0">No transactions found</p>
