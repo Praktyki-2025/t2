@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Transaction } from '../transaction';
 import { NgFor, NgIf } from '@angular/common';
 import { Text } from '@angular/compiler';
+import { TransactionService } from '../transaction.service';
 
 @Component({
   selector: 'app-home',
@@ -17,16 +18,14 @@ export class HomeComponent implements OnInit {
 
   token: string;
 
-  transactions: Transaction[] = [
-    { uuid: "1", amount: 100, timestamp: "now" },
-    { uuid: "2", amount: 200, timestamp: "now+1" },
-    { uuid: "3", amount: 300, timestamp: "now+2" },
-    { uuid: "4", amount: 400, timestamp: "now+3" },
-    { uuid: "5", amount: 500, timestamp: "now+4" }
-  ];
+  transactions: Transaction[] = [];
 
-  constructor(router: Router) {
+  transactionService: TransactionService;
+
+  constructor(router: Router, transactionService: TransactionService) {
     this.router = router;
+
+    this.transactionService = transactionService;
 
     if(localStorage.getItem("user") === null) {
       this.router.navigate(['/login']);
@@ -35,6 +34,10 @@ export class HomeComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem("user") || '{}');
     this.email = user.email || '';
     this.token = user.token || '';
+
+    this.refreshTransactions().then(() => {
+      console.log("Transactions refreshed successfully.");
+    });
   }
 
   ngOnInit(): void {
@@ -48,5 +51,13 @@ export class HomeComponent implements OnInit {
 
   editAccount() {
     this.router.navigate(['/edit-account']);
+  }
+
+  newTransaction() {
+    this.router.navigate(['/new-transaction']);
+  }
+
+  async refreshTransactions() {
+    this.transactions = await this.transactionService.getTransactions();
   }
 }

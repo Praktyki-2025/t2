@@ -44,4 +44,26 @@ export class TransactionService {
       return [];
     }
   }
+
+  /**
+   * Creates a new transaction with the given amount and timestamp.
+   * @param amount amount of the transaction
+   * @param timestamp timestamp of the transaction
+   * @returns http status code. 201 for success, 400 for bad request, 404 for unauthorized, 500 for server error
+   */
+  async newTransaction(amount: number, timestamp: string): Promise<number> {
+    const response = await fetch(`${this.baseUrl}/payment/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: JSON.parse(localStorage.getItem('user') || '{}').token || '',
+        amount: amount,
+        timestamp: timestamp
+      })
+    });
+
+    return response.status;
+  }
 }

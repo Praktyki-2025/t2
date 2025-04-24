@@ -87,7 +87,7 @@ def create_payment():
     if user is None:
         return jsonify({"message": "User not found", "code": 404}), 404
     
-    payment = Payment(user, amount, timestamp or datetime.now())
+    payment = Payment(user, amount, datetime.fromisoformat(timestamp) or datetime.now())
     PAYMENTS.append(payment)
     
     return jsonify({"message": "Payment created", "payment": payment.serialize(), "code": 201}), 201
